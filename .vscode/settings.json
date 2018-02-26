@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gpio_config.h": "c",
+        "system_managment.h": "c"
+    }
+}

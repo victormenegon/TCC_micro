@@ -1,0 +1,1 @@
+static void MX_ADC1_Init(void);
