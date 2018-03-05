@@ -1,3 +1,20 @@
+/******************************************************************************
+* The information contained herein is confidential property of Embraco. The
+* user, copying, transfer or disclosure of such information is prohibited
+* except by express written agreement with Embraco.
+******************************************************************************/
+
+/**
+ * @file    Serial_Comm.c
+ * @brief   Utility functions for other modules.
+ *
+ * @author  Victor E. Menegon
+ * @date    2018-01-03
+ *
+ */
+
+/* Includes Section ---------------------------------------------------------*/
+
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include "utils.h"
@@ -11,6 +28,8 @@ static uint8_t Tx_Comm_Serial [COMMAND_LENGTH_SERIAL_EMBRACO];
 /* Global variables ---------------------------------------------------------*/
 extern volatile Motor_Ref_Speed_Gb;
 extern volatile Motor_Real_Speed_Gb;
+
+/* Functions ---------------------------------------------------------*/
 
 /**
  * @brief   Initializes USART3 to use in Serial Communication

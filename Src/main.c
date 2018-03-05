@@ -13,18 +13,11 @@
 #include "Serial_Comm.h"
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
 UART_HandleTypeDef huart3;
 
 /* Global variables ---------------------------------------------------------*/
-uint16_t Motor_Ref_Speed_Gb;
-uint16_t Motor_Real_Speed_Gb;
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_ADC1_Init(void);
-static void MX_USART3_UART_Init(void);
+volatile uint16_t Motor_Ref_Speed_Gb;
+volatile uint16_t Motor_Real_Speed_Gb;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -38,20 +31,21 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
   SystemClock_Config();
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_ADC1_Init();
+  GPIO_Init();
+  HAL_ADC_MspInit();
   Serial_Comm_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init(); 
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     Serial_Comm_Main();
-
+    ADC_main();
   }
 }
 

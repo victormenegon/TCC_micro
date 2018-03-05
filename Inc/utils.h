@@ -18,6 +18,14 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
+/* Defines sections ---------------------------------------------------------*/
+
+#define Qb_8    256
+#define Qb_10   1024
+#define Qb_12   4096
+#define Qb_16   65536
+
+/* Prototypes sections ---------------------------------------------------------*/
 /**
  * @brief   Convert two uint8_t into a 16 bits word.
  */

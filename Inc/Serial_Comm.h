@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /**
- * @file    USART_Config.h
+ * @file    Serial_Comm.h
  * @brief   Serial driver configurations for communication with the
  *          microcontroller which controls the compressor.
  *
@@ -16,8 +16,8 @@
  * @{
  */
 
-#ifndef _USART_CONFIG_H
-#define _USART_CONFIG_H
+#ifndef _SERIAL_COMM_H
+#define _SERIAL_COMM_H
 
 /* defines ---------------------------------------------------------*/
 #define BAUD_RATE   600

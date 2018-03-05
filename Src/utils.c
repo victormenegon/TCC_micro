@@ -8,29 +8,21 @@
  * @file    utils.c
  * @brief   Utility functions for other modules.
  *
- * @author  Victor H. B. Preuss
- * @date    2017-09-01
+ * @author  Victor E. Menegon
+ * @date    2018-01-03
  *
- * @addtogroup Thermostat
- * @{
  */
 
-/******************************************************************************
-* Include Section
-******************************************************************************/
+/* Includes Section ---------------------------------------------------------*/
+
 #include "main.h"
-#include "utils.h"
 
-
-/******************************************************************************
-* Private Variables Section
-******************************************************************************/
+/* Private variables ---------------------------------------------------------*/
 
 /**
  * @brief   
  */
 static const uint8_t lsb_mask = 0xFFU;
-
 
 /******************************************************************************
 * Public Function Implementation Section

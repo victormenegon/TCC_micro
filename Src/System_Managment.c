@@ -1,4 +1,23 @@
+/******************************************************************************
+* The information contained herein is confidential property of Embraco. The
+* user, copying, transfer or disclosure of such information is prohibited
+* except by express written agreement with Embraco.
+******************************************************************************/
+
+/**
+ * @file    System_Managemet.c
+ * @brief   Utility functions for other modules.
+ *
+ * @author  Victor E. Menegon
+ * @date    2018-01-03
+ *
+ */
+
+/* Include sections ---------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+
+/* Functions ---------------------------------------------------------*/
+
 /**
   * @brief System Clock Configuration
   * @retval None

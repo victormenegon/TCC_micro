@@ -1,3 +1,19 @@
+/******************************************************************************
+* The information contained herein is confidential property of Embraco. The
+* user, copying, transfer or disclosure of such information is prohibited
+* except by express written agreement with Embraco.
+******************************************************************************/
+
+/**
+ * @file    GPIO_Config.c
+ * @brief   Utility functions for other modules.
+ *
+ * @author  Victor E. Menegon
+ * @date    2018-01-03
+ *
+ */
+
+/* Includes Section ---------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
 
@@ -17,7 +33,7 @@
      PB7   ------> S_TIM4_CH2
      PB8   ------> S_TIM4_CH3
 */
-static void MX_GPIO_Init(void)
+static void GPIO_Init(void)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;

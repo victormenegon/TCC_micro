@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "gpio_config.h": "c",
-        "system_managment.h": "c"
+        "system_managment.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "stm32f1xx.h": "c",
+        "utils.h": "c",
+        "serial_comm.h": "c",
+        "stm32f1xx_hal_conf.h": "c"
     }
 }
