@@ -5,8 +5,8 @@
 ******************************************************************************/
 
 /**
- * @file    ADC_Config.h
- * @brief   ADC configurations.
+ * @file    PWM.h
+ * @brief   PWM Configuration and use header.
  *
  * @author  Victor E. Menegon
  * @date    2018-02-21
@@ -15,13 +15,9 @@
  * @{
  */
 
-#ifndef  _ADC_CONFIG_H
-#define  _ADC_CONFIG_H
+#ifndef  _PWM_H
+#define  _PWM_H
 
-/* Functions Protypes ---------------------------------------------------------*/
-void HAL_ADC_MspInit(void);
-static void MX_ADC1_Init(void);
-static void MX_ADC2_Init(void);
-void ADC_main(void);
+static void MX_TIM1_Init(void);
 
-#endif /** _ADC_CONFIG_H */
+#endif /** _PWM_H */

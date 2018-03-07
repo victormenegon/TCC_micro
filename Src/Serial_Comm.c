@@ -6,7 +6,7 @@
 
 /**
  * @file    Serial_Comm.c
- * @brief   Utility functions for other modules.
+ * @brief   Serial functions.
  *
  * @author  Victor E. Menegon
  * @date    2018-01-03
@@ -307,7 +307,7 @@ static void User_USART_RxCpltCallback (void)
   * @retval None
   * @Note       
   */
-void USART3_IRQHandler (void)
+void USART3_IRQHandler(void)
 {
 	uint32_t isrflags = READ_REG(huart3.Instance->ISR);
 	uint32_t cr1its   = READ_REG(huart3.Instance->CR1);
@@ -320,5 +320,4 @@ void USART3_IRQHandler (void)
 	{
 		User_USART_TxCpltCallback();
 	}
-	//HAL_UART_IRQHandler(&huart3);
 }

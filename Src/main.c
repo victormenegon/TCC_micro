@@ -11,6 +11,7 @@
 #include "GPIO_Config.h"
 #include "ADC_Config.h"
 #include "Serial_Comm.h"
+#include "PWM.h"
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart3;
@@ -41,7 +42,7 @@ int main(void)
   Serial_Comm_Init();
   MX_ADC1_Init();
   MX_ADC2_Init(); 
-
+  MX_TIM1_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
