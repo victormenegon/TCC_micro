@@ -222,18 +222,14 @@ void get_value_from_variable(void)
   uint8_t high_byte_rx;
   uint8_t low_byte_tx;
   uint8_t high_byte_tx;
+  uint16_t variable_address;
 
-  //////////////////////////
-/* Se certificar dessa parte
   low_byte_rx = Rx_Comm_Serial[2];
   high_byte_rx = Rx_Comm_Serial[3];
-  void * p_low = (void *)low_byte_rx;
-  void * p_high = (void *)high_byte_rx;
-  
-  low_byte_tx = *p_low;
-  high_byte_tx = *p_high;
-*/
-  //////////////////////////
+
+  uint8_to_uint16(low_byte_rx, high_byte_rx, &variable_address);
+  uint16_t* variable_value = variable_address;
+  uint16_to_uint8(*variable_value, low_byte_tx, high_byte_tx);
   
   Tx_Comm_Serial[0] = RECEPTION_IDENTIFICATION_1ST;
   Tx_Comm_Serial[1] = ANSWER_READ_VARIABLE_2ND;
@@ -324,5 +320,5 @@ void USART3_IRQHandler (void)
 	{
 		User_USART_TxCpltCallback();
 	}
-	HAL_UART_IRQHandler(&huart3);
+	//HAL_UART_IRQHandler(&huart3);
 }

@@ -16,9 +16,20 @@
 /* Includes Section ---------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
+/* Global variables ---------------------------------------------------------*/
+volatile uint16_t V_Bus_Gb;
+volatile uint16_t Va_Gb;
+volatile uint16_t Vb_Gb;
+volatile uint16_t Vc_Gb;
+volatile uint16_t Ia_Gb;
+volatile uint16_t Ib_Gb;
+volatile uint16_t Ic_Gb;
+
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
+uint8_t b_adc_1_convertion_completed = FALSE;
+uint8_t b_adc_2_convertion_completed = FALSE;
 
 void HAL_ADC_MspInit()
 {
@@ -29,7 +40,9 @@ void HAL_ADC_MspInit()
   /* USER CODE END ADC1_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_ADC1_CLK_ENABLE();
-  
+      /* Peripheral clock enable */
+    __HAL_RCC_ADC2_CLK_ENABLE();
+
     /**ADC1 GPIO Configuration    
     PA0-WKUP     ------> ADC1_IN0
     PA1     ------> ADC1_IN1
@@ -41,9 +54,6 @@ void HAL_ADC_MspInit()
     GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    /* Peripheral clock enable */
-    __HAL_RCC_ADC2_CLK_ENABLE();
   
     /**ADC2 GPIO Configuration    
     PA6     ------> ADC2_IN6
@@ -134,7 +144,8 @@ static void MX_ADC1_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
+__HAL_ADC_ENABLE(&hadc1);
+__HAL_ADC_ENABLE_IT(&hadc1,ADC_IT_JEOC);
 }
 
 /* ADC2 init function */
@@ -200,19 +211,74 @@ static void MX_ADC2_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+__HAL_ADC_ENABLE(&hadc2);
+__HAL_ADC_ENABLE_IT(&hadc2, ADC_IT_JEOC);
 }
 
+/**
+ * @brief  ADC main
+ * @details This function will be responsible for calibrating ADC and
+ *          assigning converted values to respectiv variables.
+ * @author  Victor E. Menegon
+ * @date    2018-03-06
+ */
 void ADC_main(void)
 {
-  __HAL_ADC_ENABLE(hadc1);
-  __HAL_ADC_ENABLE(hadc2);
-  HAL_ADCEx_Calibration_Start(hadc1);
-  HAL_ADCEx_Calibration_Start(hadc2);
-  HAL_ADC_Start_IT(hadc1);
-  HAL_ADC_Start_IT(hadc2);
+  HAL_ADCEx_Calibration_Start(&hadc1);
+  HAL_ADCEx_Calibration_Start(&hadc2);
+  HAL_ADCEx_InjectedStart(&hadc1);
+  HAL_ADCEx_InjectedStart(&hadc2);
+
+  if(b_adc_1_convertion_completed == TRUE)
+  {
+    b_adc_1_convertion_completed = FALSE;
+    V_Bus_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
+    Vc_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2);
+    Vb_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_3);
+    Va_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_4);
+  }
+  else if(b_adc_2_convertion_completed == TRUE)
+  {
+    b_adc_2_convertion_completed = FALSE;
+    Ia_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
+    Ic_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2);
+    Ib_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_3);
+  }
 }
 
+
+/**
+ * @brief  Injected conversion complete callback in non blocking mode
+ * @details 
+ * @author  Victor E. Menegon
+ * @date    2018-03-06
+ */
+void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if(hadc->Instance == hadc1)
+  {
+    b_adc_1_convertion_completed = TRUE;
+  }
+  else if(hadc->Instance == hadc2)  
+  {
+    b_adc_2_convertion_completed = TRUE;
+  }
+}
+
+/**
+ * @brief  ADC1 and ADC2 handler in injection mode
+ * @details 
+ * @author  Victor E. Menegon
+ * @date    2018-03-06
+ */
 void ADC1_2_IRQHandler(void)
 {
-
+  if(__HAL_ADC_GET_IT_SOURCE(&hadc1, ADC_IT_JEOC))
+  {
+    HAL_ADCEx_InjectedConvCpltCallback(&hadc1);
+  }
+  if(__HAL_ADC_GET_IT_SOURCE(&hadc2, ADC_IT_JEOC))
+  {
+    HAL_ADCEx_InjectedConvCpltCallback(&hadc2);
+  }
 }

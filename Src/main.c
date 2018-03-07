@@ -18,6 +18,8 @@ UART_HandleTypeDef huart3;
 /* Global variables ---------------------------------------------------------*/
 volatile uint16_t Motor_Ref_Speed_Gb;
 volatile uint16_t Motor_Real_Speed_Gb;
+volatile uint8_t fl_over_voltage = 0;
+volatile uint16_t V_Bus_Max;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -44,8 +46,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    if(V_Bus_Avg_Gb >= V_Bus_Max)
+        {
+          fl_over_voltage = 1;
+          PWM_Outputs_Disable_Mc;				/*Open PWM OUTPUTS*/
+        }
+
     Serial_Comm_Main();
     ADC_main();
+    
   }
 }
 
