@@ -18,6 +18,10 @@
 #ifndef  _PWM_H
 #define  _PWM_H
 
+
+/* Functions Protypes ---------------------------------------------------------*/
 static void MX_TIM1_Init(void);
+void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos);
+position_t Motor_Position(uint16_t motor_angle);
 
 #endif /** _PWM_H */

@@ -18,12 +18,20 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal_tim.h"
+#include "utils.h"
 
 /* Private variables ---------------------------------------------------------*/
 static TIM_HandleTypeDef htim1;
+static TIM_MasterConfigTypeDef mastertim1;
 
 /* Functions ---------------------------------------------------------*/
 
+/**
+ * @brief   Configure and starts TIM1 to use with PWM
+ * @details 
+ * @author  Victor E. Menegon
+ * @date    2018-03-07
+ */
 /* TIM1 init function */
 static void MX_TIM1_Init(void)
 {
@@ -44,31 +52,31 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  mastertim1.sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  mastertim1.sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sConfigOC.OCMode = TIM_OCMODE_FORCED_INACTIVE;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
   sConfigOC.Pulse = 7200;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -85,6 +93,67 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  HAL_TIM_MspPostInit(&htim1);
-  HAL_TIM_OC_MspInit(&htim1);
+HAL_TIM_MspPostInit(&htim1);
+HAL_TIM_OC_MspInit(&htim1);
+HAL_TIMEx_MasterConfigSynchronization(&htim1, &mastertim1);
+HAL_TIM_PWM_ConfigChannel(&htim1,&sConfigOC,TIM_CHANNEL_1);
+HAL_TIM_PWM_ConfigChannel(&htim1,&sConfigOC,TIM_CHANNEL_2);
+HAL_TIM_PWM_ConfigChannel(&htim1,&sConfigOC,TIM_CHANNEL_3);
+HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_2);
+HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_3);
+}
+
+
+/**
+ * @brief   PWM according to sector and required Duty Cycle
+ * @details 
+ * @author  Victor E. Menegon
+ * @date    2018-03-08
+ */
+void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos)
+{
+    uint16_t new_duty_cycle = *duty_cycle;
+    position_t new_pos = mec_pos;
+    
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,new_duty_cycle);
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_2,new_duty_cycle);
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_3,new_duty_cycle);
+
+    switch(new_pos)
+    {
+        TIM_OUTPUTSTATE_DISABLE
+        TIM_OUTPUTSTATE_ENABLE
+        case POS_1:
+        
+        break;
+        case POS_2:
+
+        break;
+        case POS_3:
+
+        break;
+        case POS_4:
+
+        break;
+        case POS_5:
+
+        break;
+        case POS_6:
+
+        break;
+        default:
+
+        break;
+    }
+}
+
+position_t Motor_Position(uint16_t motor_angle)
+{
+    //Return position utilizando Get_Motor_Angle.
+}
+
+uint16_t Get_Motor_Angle()
+{
+    //Fazer as contas do Encoder
 }

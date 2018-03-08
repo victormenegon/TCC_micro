@@ -222,7 +222,7 @@ __HAL_ADC_ENABLE_IT(&hadc2, ADC_IT_JEOC);
  * @author  Victor E. Menegon
  * @date    2018-03-06
  */
-void ADC_main(void)
+void ADC_Main(void)
 {
   HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_ADCEx_Calibration_Start(&hadc2);

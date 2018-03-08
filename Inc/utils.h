@@ -19,6 +19,7 @@
 #define _UTILS_H
 
 /* Defines sections ---------------------------------------------------------*/
+typedef enum {UNDEFINED_POS, POS_1, POS_2, POS_3, POS_4, POS_5, POS_6} position_t;
 
 #define Qb_8    256
 #define Qb_10   1024

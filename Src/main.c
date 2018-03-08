@@ -21,6 +21,7 @@ volatile uint16_t Motor_Ref_Speed_Gb;
 volatile uint16_t Motor_Real_Speed_Gb;
 volatile uint8_t fl_over_voltage = 0;
 volatile uint16_t V_Bus_Max;
+volatile uint16_t Duty_Cycle_Gb;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -54,8 +55,9 @@ int main(void)
         }
 
     Serial_Comm_Main();
-    ADC_main();
-    
+    ADC_Main();
+    Mec_Angle_Gb = Get_Motor_Angle();
+    PWM_Manager(&Duty_Cycle_Gb, Motor_Position());
   }
 }
 
