@@ -57,7 +57,7 @@ int main(void)
     Serial_Comm_Main();
     ADC_Main();
     Mec_Angle_Gb = Get_Motor_Angle();
-    PWM_Manager(&Duty_Cycle_Gb, Motor_Position());
+    PWM_Manager(&Duty_Cycle_Gb, Motor_Position(Mec_Angle_Gb));
   }
 }
 

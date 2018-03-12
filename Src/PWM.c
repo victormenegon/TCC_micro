@@ -81,7 +81,7 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_ENABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
   sBreakDeadTimeConfig.DeadTime = 72;
@@ -122,28 +122,33 @@ void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos)
 
     switch(new_pos)
     {
-        TIM_OUTPUTSTATE_DISABLE
-        TIM_OUTPUTSTATE_ENABLE
         case POS_1:
-        
+            PWM_1_Pos;
+            TIM_EVENTSOURCE_COM;
         break;
         case POS_2:
-
+            PWM_2_Pos;
+            TIM_EVENTSOURCE_COM;
         break;
         case POS_3:
-
+            PWM_3_Pos;
+            TIM_EVENTSOURCE_COM;
         break;
         case POS_4:
-
+            PWM_4_Pos;
+            TIM_EVENTSOURCE_COM;
         break;
         case POS_5:
-
+            PWM_5_Pos;
+            TIM_EVENTSOURCE_COM;
         break;
         case POS_6:
-
+            PWM_6_Pos;
+            TIM_EVENTSOURCE_COM;
         break;
         default:
-
+            PWM_Dis;
+            TIM_EVENTSOURCE_COM;
         break;
     }
 }

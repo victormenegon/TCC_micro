@@ -26,6 +26,14 @@ typedef enum {UNDEFINED_POS, POS_1, POS_2, POS_3, POS_4, POS_5, POS_6} position_
 #define Qb_12   4096
 #define Qb_16   65536
 
+#define PWM_1_Pos  TIM1->CCER |= ((uint16_t)0b0000000001000001)
+#define PWM_2_Pos  TIM1->CCER |= ((uint16_t)0b0000010000000001)
+#define PWM_3_Pos  TIM1->CCER |= ((uint16_t)0b0000010000010000)
+#define PWM_4_Pos  TIM1->CCER |= ((uint16_t)0b0000000000010100)
+#define PWM_5_Pos  TIM1->CCER |= ((uint16_t)0b0000000100000100)
+#define PWM_6_Pos  TIM1->CCER |= ((uint16_t)0b0000000101000000)
+#define PWM_Dis    TIM1->CCER |= ((uint16_t)0b0000000000000000)
+
 /* Prototypes sections ---------------------------------------------------------*/
 /**
  * @brief   Convert two uint8_t into a 16 bits word.
