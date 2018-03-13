@@ -12,6 +12,7 @@
 #include "ADC_Config.h"
 #include "Serial_Comm.h"
 #include "PWM.h"
+#include "Encoder.h"
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart3;
@@ -45,7 +46,7 @@ int main(void)
   MX_ADC2_Init(); 
   MX_TIM1_Init();
   MX_TIM4_Init();
-  
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -58,8 +59,8 @@ int main(void)
 
     Serial_Comm_Main();
     ADC_Main();
-    Mec_Angle_Gb = Get_Motor_Angle();
-    PWM_Manager(&Duty_Cycle_Gb, Motor_Position(Mec_Angle_Gb));
+    Encoder_Direction_Supervisory_Sb();
+    PWM_Manager(&Duty_Cycle_Gb, Motor_Position(Ele_Angle_Encoder_16bits_Mc());
   }
 }
 

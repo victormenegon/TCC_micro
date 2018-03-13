@@ -29,7 +29,7 @@ static uint8_t Tx_Comm_Serial [COMMAND_LENGTH_SERIAL_EMBRACO];
 extern volatile Motor_Ref_Speed_Gb;
 extern volatile Motor_Real_Speed_Gb;
 
-/* Functions ---------------------------------------------------------*/
+/* Functions Section ---------------------------------------------------------*/
 
 /**
  * @brief   Initializes USART3 to use in Serial Communication
