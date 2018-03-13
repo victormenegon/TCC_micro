@@ -11,7 +11,7 @@
  * @author  Victor H. B. Preuss
  * @date    2017-02-23
  *
- * @addtogroup Thermostat
+ * @addtogroup
  * @{
  */
 
