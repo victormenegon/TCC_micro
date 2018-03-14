@@ -8,6 +8,7 @@
         "serial_comm.h": "c",
         "stm32f1xx_hal_conf.h": "c",
         "stm32f1xx_hal_tim.h": "c",
-        "adc_config.h": "c"
+        "adc_config.h": "c",
+        "stm32f1xx_hal_uart.h": "c"
     }
 }

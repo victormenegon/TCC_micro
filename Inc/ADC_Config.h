@@ -19,9 +19,7 @@
 #define  _ADC_CONFIG_H
 
 /* Functions Protypes ---------------------------------------------------------*/
-void HAL_ADC_MspInit(void);
+void ADC_Main(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
-void ADC_Main(void);
-
 #endif /** _ADC_CONFIG_H */

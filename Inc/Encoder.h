@@ -30,8 +30,6 @@
 #define Ele_Angle_Encoder_16bits_Mc     (Encoder_Counter_Mc*Encoder_2_16bits*Poles_Pair) + Encoder_Adjust_Pos_Gb - Encoder_Adjust_Neg_Gb1
 
 /* Functions Protypes ---------------------------------------------------------*/
-static void MX_TIM4_Init(void);
-void EXTI9_5_IRQn(void);
 void Encoder_Direction_Supervisory_Sb(void);
 
 #endif /** _ENCODER_H */

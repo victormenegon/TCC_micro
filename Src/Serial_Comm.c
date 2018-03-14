@@ -18,16 +18,30 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include "utils.h"
+#include "Serial_Comm.h"
+#include "stm32f1xx_hal_uart.h"
 
 /* Private variables ---------------------------------------------------------*/
 static UART_HandleTypeDef husart3;
 static serial_state_t serial_state = WAITING;
 static uint8_t Rx_Comm_Serial [COMMAND_LENGTH_SERIAL_EMBRACO];
 static uint8_t Tx_Comm_Serial [COMMAND_LENGTH_SERIAL_EMBRACO];
+uint8_t b_transmission_completed = FALSE;
+uint8_t b_reception_completed = FALSE;
 
 /* Global variables ---------------------------------------------------------*/
 extern volatile Motor_Ref_Speed_Gb;
 extern volatile Motor_Real_Speed_Gb;
+
+/* Local Prototypes ---------------------------------------------------------*/
+void USART3_IRQHandler (void);
+void processing_received_data (void);
+void set_ref_speed(void);
+void transmit_ref_speed(void);
+void get_status_serial(void);
+void get_value_from_variable(void);
+void get_real_speed(void);
+static uint8_t calc_checksum (const uint8_t * p_command);
 
 /* Functions Section ---------------------------------------------------------*/
 
@@ -41,15 +55,15 @@ extern volatile Motor_Real_Speed_Gb;
 void Serial_Comm_Init(void)
 {
 
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = BAUD_RATE;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
+  husart3.Instance = USART3;
+  husart3.Init.BaudRate = BAUD_RATE;
+  husart3.Init.WordLength = UART_WORDLENGTH_8B;
+  husart3.Init.StopBits = UART_STOPBITS_1;
+  husart3.Init.Parity = UART_PARITY_NONE;
+  husart3.Init.Mode = UART_MODE_TX_RX;
+  husart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  husart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&husart3) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -70,8 +84,8 @@ void Serial_Comm_Main(void)
     {
       serial_state = RECEIVING;
       b_reception_completed = FALSE;
-      __HAL_UART_ENABLE_IT(&huart3,UART_IT_RXNE);
-      __HAL_UART_DISABLE_IT(&huart3,UART_IT_TC);
+      __HAL_UART_ENABLE_IT(&husart3,UART_IT_RXNE);
+      __HAL_UART_DISABLE_IT(&husart3,UART_IT_TC);
     }
     break;
 
@@ -79,7 +93,7 @@ void Serial_Comm_Main(void)
     {
       if(b_reception_completed)
       {
-        if (HAL_UART_Receive_IT(&UartHandle, (uint8_t *) Rx_Comm_Serial, COMMAND_LENGTH_SERIAL_EMBRACO) != HAL_OK)
+        if (HAL_UART_Receive_IT(&husart3, (uint8_t *) Rx_Comm_Serial, COMMAND_LENGTH_SERIAL_EMBRACO) != HAL_OK)
         {
           //serial_error_handler();
         }
@@ -88,8 +102,8 @@ void Serial_Comm_Main(void)
           processing_received_data();
           serial_state = SENDING;
           b_transmission_completed = FALSE;
-          __HAL_UART_ENABLE_IT(&huart3,UART_IT_TC);
-          __HAL_UART_DISABLE_IT(&huart3,UART_IT_RXNE);
+          __HAL_UART_ENABLE_IT(&husart3,UART_IT_TC);
+          __HAL_UART_DISABLE_IT(&husart3,UART_IT_RXNE);
         }    
       }
     }
@@ -97,7 +111,7 @@ void Serial_Comm_Main(void)
 
     case SENDING:
     {
-      if (HAL_UART_Transmit_IT(&UartHandle, (uint8_t *) tx, COMMAND_LENGTH_SERIAL_EMBRACO) != HAL_OK)
+      if (HAL_UART_Transmit_IT(&husart3, (uint8_t *) Tx_Comm_Serial, COMMAND_LENGTH_SERIAL_EMBRACO) != HAL_OK)
       {
         //serial_error_handler();
       }
@@ -159,14 +173,14 @@ void processing_received_data(void)
  * @author  Victor E. Menegon
  * @date    2018-02-25
  */
-void set_ref_speed(void);
+void set_ref_speed(void)
 {
   uint8_t low_byte;
   uint8_t high_byte;
 
   low_byte = Rx_Comm_Serial[2];
   high_byte = Rx_Comm_Serial[3];
-  uint8_to_uint16(low_byte, high_byte, &Motor_Ref_Speed_Gb;
+  uint8_to_uint16(low_byte, high_byte, &Motor_Ref_Speed_Gb);
 
   Tx_Comm_Serial[0] = RECEPTION_IDENTIFICATION_1ST;
   Tx_Comm_Serial[1] = ANSWER_TRANSMIT_SET_SPEED_2ND;
@@ -181,7 +195,7 @@ void set_ref_speed(void);
  * @author  Victor E. Menegon
  * @date    2018-02-25
  */
-void transmit_ref_speed(void);
+void transmit_ref_speed(void)
 {
   uint8_t low_byte;
   uint8_t high_byte;
@@ -280,10 +294,10 @@ static uint8_t calc_checksum (const uint8_t * p_command)
 /**
  * @brief   TX complete callback function.
  * @details 
- * @author  Lucas M. Spadini
- * @date    2018-01-29
+ * @author  Victor E. Menegon
+ * @date    2018-03-14
  */
-static void User_USART_TxCpltCallback (void)
+void HAL_UART_TxCpltCallback (UART_HandleTypeDef *huart)
 {
    /* Set transmission complete flag */
     b_transmission_completed = TRUE;
@@ -292,10 +306,10 @@ static void User_USART_TxCpltCallback (void)
 /**
  * @brief   RX complete callback function.
  * @details 
- * @author  Lucas M. Spadini
- * @date    2018-01-29
+ * @author  Victor E. Menegon
+ * @date    2018-03-14
  */
-static void User_USART_RxCpltCallback (void)
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef *huart)
 {
    /* Set transmission complete flag */
 	b_reception_completed = TRUE;
@@ -309,15 +323,5 @@ static void User_USART_RxCpltCallback (void)
   */
 void USART3_IRQHandler(void)
 {
-	uint32_t isrflags = READ_REG(huart3.Instance->ISR);
-	uint32_t cr1its   = READ_REG(huart3.Instance->CR1);
-
-	if(((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
-	{
-		User_USART_RxCpltCallback();
-	}
-	else if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
-	{
-		User_USART_TxCpltCallback();
-	}
+	HAL_UART_IRQHandler(&husart3);
 }

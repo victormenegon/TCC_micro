@@ -19,10 +19,11 @@
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal_tim.h"
 #include "utils.h"
+#include "PWM.h"
 
 /* Private variables ---------------------------------------------------------*/
 static TIM_HandleTypeDef htim1;
-static TIM_MasterConfigTypeDef mastertim1;
+//static TIM_MasterConfigTypeDef mastertim1;
 
 /* Functions ---------------------------------------------------------*/
 
@@ -52,8 +53,8 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  mastertim1.sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  mastertim1.sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -95,7 +96,7 @@ static void MX_TIM1_Init(void)
 
 HAL_TIM_MspPostInit(&htim1);
 HAL_TIM_OC_MspInit(&htim1);
-HAL_TIMEx_MasterConfigSynchronization(&htim1, &mastertim1);
+HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig);
 HAL_TIM_PWM_ConfigChannel(&htim1,&sConfigOC,TIM_CHANNEL_1);
 HAL_TIM_PWM_ConfigChannel(&htim1,&sConfigOC,TIM_CHANNEL_2);
 HAL_TIM_PWM_ConfigChannel(&htim1,&sConfigOC,TIM_CHANNEL_3);
@@ -111,7 +112,7 @@ HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_3);
  * @author  Victor E. Menegon
  * @date    2018-03-08
  */
-void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos)
+/*void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos)
 {
     uint16_t new_duty_cycle = *duty_cycle;
     position_t new_pos = mec_pos;
@@ -162,3 +163,4 @@ uint16_t Get_Motor_Angle()
 {
     //Fazer as contas do Encoder
 }
+*/

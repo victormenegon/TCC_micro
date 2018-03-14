@@ -15,7 +15,6 @@
 #include "Encoder.h"
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart3;
 
 /* Global variables ---------------------------------------------------------*/
 volatile uint16_t Motor_Ref_Speed_Gb;
@@ -40,27 +39,26 @@ int main(void)
 
   /* Initialize all configured peripherals */
   GPIO_Init();
-  HAL_ADC_MspInit();
   Serial_Comm_Init();
   MX_ADC1_Init();
   MX_ADC2_Init(); 
   MX_TIM1_Init();
-  MX_TIM4_Init();
+  //MX_TIM4_Init();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if(V_Bus_Avg_Gb >= V_Bus_Max)
+    /*if(V_Bus_Avg_Gb >= V_Bus_Max)
         {
           fl_over_voltage = 1;
           PWM_Outputs_Disable_Mc;				/*Open PWM OUTPUTS*/
-        }
+       // }
 
     Serial_Comm_Main();
     ADC_Main();
-    Encoder_Direction_Supervisory_Sb();
-    PWM_Manager(&Duty_Cycle_Gb, Motor_Position(Ele_Angle_Encoder_16bits_Mc());
+    //Encoder_Direction_Supervisory_Sb();
+    //PWM_Manager(&Duty_Cycle_Gb, Motor_Position(Ele_Angle_Encoder_16bits_Mc());
   }
 }
 

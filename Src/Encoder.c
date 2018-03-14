@@ -15,7 +15,8 @@
 
 /* Includes Section ---------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
-
+#include "Encoder.h"
+#include "utils.h"
 /* Private Variables Section ------------------------------------------------*/
 TIM_HandleTypeDef htim4;
 volatile uint16_t first_z_signal = TRUE;
@@ -31,7 +32,7 @@ volatile uint16_t Encoder_Adjust_Neg_Gb;
  * @date    2018-03-12
  */
 /* TIM4 init function */
-static void MX_TIM4_Init(void)
+/*static void MX_TIM4_Init(void)
 {
   TIM_Encoder_InitTypeDef sConfigEncoder;
 
@@ -74,7 +75,7 @@ static void MX_TIM4_Init(void)
  * @author  Roberto Andrich
  * @date    2012-01-06
  */
-void Encoder_Direction_Supervisory_Sb(void)
+/*void Encoder_Direction_Supervisory_Sb(void)
 {
     static uint16_t Encoder_Lc=0;
     static uint16_t Encoder_Old_Lc=0;
@@ -108,7 +109,7 @@ void Encoder_Direction_Supervisory_Sb(void)
         }
     }
 }
-
+*/
 /**
  * @brief   Z signal interruption handler
  * @details Used to recalibrate encoder counter
@@ -119,6 +120,7 @@ void Encoder_Direction_Supervisory_Sb(void)
  * @author  Victor E. Menegon
  * @date    2018-03-13
  */
+/*
 void EXTI9_5_IRQn(void)
 {
     if(first_z_signal)
@@ -133,3 +135,4 @@ void EXTI9_5_IRQn(void)
     }
 __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
 }
+*/

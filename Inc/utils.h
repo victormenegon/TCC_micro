@@ -19,6 +19,15 @@
 #define _UTILS_H
 
 /* Defines sections ---------------------------------------------------------*/
+typedef int                 bool_t;
+typedef char                char_t;
+typedef signed char         int8_t;
+typedef unsigned char       uint8_t;
+typedef signed int          int16_t;
+typedef unsigned int        uint16_t;
+typedef signed long         int32_t;
+typedef unsigned long       uint32_t;
+
 typedef enum {UNDEFINED_POS, POS_1, POS_2, POS_3, POS_4, POS_5, POS_6} position_t;
 
 #define Qb_8    256

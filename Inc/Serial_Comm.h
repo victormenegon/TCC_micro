@@ -152,16 +152,6 @@ typedef enum
 /* Functions Protypes ---------------------------------------------------------*/
 void Serial_Comm_Init(void);
 void Serial_Comm_Main(void);
-void USART3_IRQHandler (void);
-static void User_USART_RxCpltCallback (void);
-static void User_USART_TxCpltCallback (void);
-void processing_received_data (void);
-void set_ref_speed(void);
-void transmit_ref_speed(void);
-void get_status_serial(void);
-void get_value_from_variable(void);
-void get_real_speed(void);
-static uint8_t calc_checksum (const uint8_t * p_command);
 
 #endif /* _USART_CONFIG_H */
 

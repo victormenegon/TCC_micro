@@ -5,22 +5,22 @@
 ******************************************************************************/
 
 /**
- * @file    PWM.h
- * @brief   PWM Configuration and use header.
+ * @file    System_Management.h
+ * @brief   Functions and variables realated to system in general
  *
  * @author  Victor E. Menegon
  * @date    2018-02-21
  *
- * @addtogroup Serial Comm
+ * @addtogroup System Management
  * @{
  */
 
-#ifndef  _PWM_H
-#define  _PWM_H
+#ifndef  _SYSTEM_MANAGEMENT_H
+#define  _SYSTEM_MANAGEMENT_H
 
+/* Defines ---------------------------------------------------------*/
+#define Poles_Pair      2;
 
 /* Functions Protypes ---------------------------------------------------------*/
-//void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos);
-//position_t Motor_Position(uint16_t motor_angle);
-static void MX_TIM1_Init(void);
-#endif /** _PWM_H */
+
+#endif /** _SYSTEM_MANAGEMENT_H */

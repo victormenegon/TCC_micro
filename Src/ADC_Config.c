@@ -15,7 +15,8 @@
 
 /* Includes Section ---------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
-
+#include "ADC_Config.h"
+#include "utils.h"
 /* Global variables ---------------------------------------------------------*/
 volatile uint16_t V_Bus_Gb;
 volatile uint16_t Va_Gb;
@@ -28,10 +29,8 @@ volatile uint16_t Ic_Gb;
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
-uint8_t b_adc_1_convertion_completed = FALSE;
-uint8_t b_adc_2_convertion_completed = FALSE;
 
-void HAL_ADC_MspInit()
+void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
@@ -144,6 +143,7 @@ static void MX_ADC1_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
+  HAL_ADC_MspInit(&hadc1);
 __HAL_ADC_ENABLE(&hadc1);
 __HAL_ADC_ENABLE_IT(&hadc1,ADC_IT_JEOC);
 }
@@ -210,7 +210,7 @@ static void MX_ADC2_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
+  HAL_ADC_MspInit(&hadc2);
 __HAL_ADC_ENABLE(&hadc2);
 __HAL_ADC_ENABLE_IT(&hadc2, ADC_IT_JEOC);
 }
@@ -228,22 +228,6 @@ void ADC_Main(void)
   HAL_ADCEx_Calibration_Start(&hadc2);
   HAL_ADCEx_InjectedStart(&hadc1);
   HAL_ADCEx_InjectedStart(&hadc2);
-
-  if(b_adc_1_convertion_completed == TRUE)
-  {
-    b_adc_1_convertion_completed = FALSE;
-    V_Bus_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
-    Vc_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2);
-    Vb_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_3);
-    Va_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_4);
-  }
-  else if(b_adc_2_convertion_completed == TRUE)
-  {
-    b_adc_2_convertion_completed = FALSE;
-    Ia_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
-    Ic_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2);
-    Ib_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_3);
-  }
 }
 
 
@@ -255,14 +239,13 @@ void ADC_Main(void)
  */
 void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-  if(hadc->Instance == hadc1)
-  {
-    b_adc_1_convertion_completed = TRUE;
-  }
-  else if(hadc->Instance == hadc2)  
-  {
-    b_adc_2_convertion_completed = TRUE;
-  }
+    V_Bus_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
+    Vc_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2);
+    Vb_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_3);
+    Va_Gb = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_4);
+    Ia_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
+    Ic_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2);
+    Ib_Gb = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_3);
 }
 
 /**
@@ -273,12 +256,5 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
  */
 void ADC1_2_IRQHandler(void)
 {
-  if(__HAL_ADC_GET_IT_SOURCE(&hadc1, ADC_IT_JEOC))
-  {
-    HAL_ADCEx_InjectedConvCpltCallback(&hadc1);
-  }
-  if(__HAL_ADC_GET_IT_SOURCE(&hadc2, ADC_IT_JEOC))
-  {
-    HAL_ADCEx_InjectedConvCpltCallback(&hadc2);
-  }
+  HAL_ADC_IRQHandler(&hadc1);
 }
