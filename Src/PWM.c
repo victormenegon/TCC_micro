@@ -112,7 +112,7 @@ HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_3);
  * @author  Victor E. Menegon
  * @date    2018-03-08
  */
-/*void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos)
+void PWM_Manager(uint16_t *duty_cycle, position_t mec_pos)
 {
     uint16_t new_duty_cycle = *duty_cycle;
     position_t new_pos = mec_pos;
@@ -158,9 +158,3 @@ position_t Motor_Position(uint16_t motor_angle)
 {
     //Return position utilizando Get_Motor_Angle.
 }
-
-uint16_t Get_Motor_Angle()
-{
-    //Fazer as contas do Encoder
-}
-*/

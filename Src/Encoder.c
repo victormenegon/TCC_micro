@@ -32,7 +32,7 @@ volatile uint16_t Encoder_Adjust_Neg_Gb;
  * @date    2018-03-12
  */
 /* TIM4 init function */
-/*static void MX_TIM4_Init(void)
+static void MX_TIM4_Init(void)
 {
   TIM_Encoder_InitTypeDef sConfigEncoder;
 
@@ -64,7 +64,7 @@ volatile uint16_t Encoder_Adjust_Neg_Gb;
     HAL_TIM_Encoder_MspInit(&htim4);
     HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
 }
-
+#if 0
 /**
  * @brief   Z signal interruption handler
  * @details Check if encoder is counting up or down and update properly
@@ -75,7 +75,7 @@ volatile uint16_t Encoder_Adjust_Neg_Gb;
  * @author  Roberto Andrich
  * @date    2012-01-06
  */
-/*void Encoder_Direction_Supervisory_Sb(void)
+void Encoder_Direction_Supervisory_Sb(void)
 {
     static uint16_t Encoder_Lc=0;
     static uint16_t Encoder_Old_Lc=0;
@@ -109,7 +109,7 @@ volatile uint16_t Encoder_Adjust_Neg_Gb;
         }
     }
 }
-*/
+#endif
 /**
  * @brief   Z signal interruption handler
  * @details Used to recalibrate encoder counter
@@ -120,7 +120,7 @@ volatile uint16_t Encoder_Adjust_Neg_Gb;
  * @author  Victor E. Menegon
  * @date    2018-03-13
  */
-/*
+
 void EXTI9_5_IRQn(void)
 {
     if(first_z_signal)
@@ -135,4 +135,3 @@ void EXTI9_5_IRQn(void)
     }
 __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
 }
-*/

@@ -43,18 +43,17 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC2_Init(); 
   MX_TIM1_Init();
-  //MX_TIM4_Init();
+  MX_TIM4_Init();
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /*if(V_Bus_Avg_Gb >= V_Bus_Max)
-        {
-          fl_over_voltage = 1;
-          PWM_Outputs_Disable_Mc;				/*Open PWM OUTPUTS*/
-       // }
-
+    #if 0
+    if(V_Bus_Avg_Gb >= V_Bus_Max)
+      {
+        fl_over_voltage = 1;
+        PWM_Outputs_Disable_Mc;				/*Open PWM OUTPUTS*/
+      }
+    #endif 
     Serial_Comm_Main();
     ADC_Main();
     //Encoder_Direction_Supervisory_Sb();
