@@ -44,7 +44,7 @@ int main(void)
   MX_ADC2_Init(); 
   MX_TIM1_Init();
   MX_TIM4_Init();
-
+  Motor_Speed_Enc_Param();
   while (1)
   {
     #if 0
@@ -56,6 +56,7 @@ int main(void)
     #endif 
     Serial_Comm_Main();
     ADC_Main();
+    Motor_Speed();
     //Encoder_Direction_Supervisory_Sb();
     //PWM_Manager(&Duty_Cycle_Gb, Motor_Position(Ele_Angle_Encoder_16bits_Mc());
   }

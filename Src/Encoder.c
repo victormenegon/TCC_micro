@@ -14,9 +14,11 @@
  */
 
 /* Includes Section ---------------------------------------------------------*/
+#include "main"
 #include "stm32f1xx_hal.h"
 #include "Encoder.h"
 #include "utils.h"
+#include "System_Management.h"
 /* Private Variables Section ------------------------------------------------*/
 TIM_HandleTypeDef htim4;
 volatile uint16_t first_z_signal = TRUE;
@@ -24,6 +26,8 @@ volatile uint16_t Encoder_Rec_Value = 0;
 volatile uint16_t Encoder_Value_Before_Recal;
 volatile uint16_t Encoder_Adjust_Pos_Gb;
 volatile uint16_t Encoder_Adjust_Neg_Gb;
+volatile uint32_t T_Encoder_Speed_Lc = 0;
+volatile uint16_t Freq_Encoder_Lc = 0;
 /* Functions Section---------------------------------------------------------*/
 /**
  * @brief   Initializes TIM4 for Encoder use
@@ -110,6 +114,53 @@ void Encoder_Direction_Supervisory_Sb(void)
     }
 }
 #endif
+
+/**
+ * @brief   Motor speed calculation using Encoder Signal
+ * @details T_Encoder_Speed_Lc is variable for each motor, 
+ * depending on its maximum speed. It's calculated through
+ * function Motor_Speed_Enc_Param().
+ * @author  Victor E. Menegon
+ * @date    2018-04-03
+ */
+void Motor_Speed(void)
+{
+    static uint32_t Speed_Timer;
+    static uint16_t new_angle = 0;
+    static uint16_t old_angle = 0;
+    static uint16_t delta_angle = 0;
+    static uint16_t speed_16b = 0;
+    static uint16_t speed_rad_s = 0;
+    static uint16_t speed_rpm = 0;
+
+    if(Delay_Mc(Speed_Timer) >= T_Encoder_Speed_Lc)
+    {
+        Resync_Timer_Mc(Speed_Timer);
+        new_angle = Ele_Angle_Encoder_16bits_Mc;
+        delta_angle = new_ange - old_angle;
+        speed_16b = delta_angle * Freq_Encoder_Lc;
+        speed_rad_s = (uint16_t)((((uint32_t)speed_16b * Bits16_2_Encoder) / Qb_12) * Encoder_2_Rad)/Qb_16 ;
+        speed_rpm = (uint16_t)(((uint32_t)speed_rad_s * Rad_S_2_RPM) / Qb_12);
+        old_angle = new_angle;
+    }
+}
+
+/**
+ * @brief   Motor speed parameters
+ * @author  Victor E. Menegon
+ * @date    2018-04-03
+ */
+void Motor_Speed_Enc_Param(void)
+{
+    Freq_Encoder_Lc = (Max_Speed / 15);    // 4 * Max_Speed / 60
+    /*Updating Period for Encoder Speed Calculation*/
+    if (Freq_Encoder_Lc <= 0)
+    {
+        Freq_Encoder_Lc = 1;          /*Avoiding division by zero*/
+    }
+    T_Encoder_Speed_Lc = Timer_Frequency_Ct / Freq_Encoder_Lc;
+}
+
 /**
  * @brief   Z signal interruption handler
  * @details Used to recalibrate encoder counter
@@ -120,7 +171,6 @@ void Encoder_Direction_Supervisory_Sb(void)
  * @author  Victor E. Menegon
  * @date    2018-03-13
  */
-
 void EXTI9_5_IRQn(void)
 {
     if(first_z_signal)

@@ -19,12 +19,15 @@
 #define  _SYSTEM_MANAGEMENT_H
 
 /* Defines ---------------------------------------------------------*/
+
+//Motor Definitions
 #define Poles_Pair      2
+#define Max_Speed       4500
 
 //General mask to access Timer current value
-#define Timer_Gb            (SysTick->VAL)
-#define SYSCLK_FREQ_72MHz   72000000
-#define		SYSCLK_Ct	SYSCLK_FREQ_72MHz
+#define Timer_Gb                (SysTick->VAL)
+#define SYSCLK_FREQ_72MHz       72000000
+#define	SYSCLK_Ct	            SYSCLK_FREQ_72MHz
 #define Timer_Frequency_Ct		(SYSCLK_Ct/8)
 /* Constants for time measurement*/
 #define T_1ms_Ct                ((1L*Timer_Frequency_Ct)/1000)
